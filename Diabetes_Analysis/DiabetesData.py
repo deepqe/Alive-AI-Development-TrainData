@@ -210,5 +210,5 @@ class DiabetesDataset:
 
 if __name__ == "__main__":
     
-    dataset = DiabetesDataset(samples=100000)
+    dataset = DiabetesDataset(samples=1000000)
     dataset.PrepareData()
