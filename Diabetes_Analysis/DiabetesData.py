@@ -2,247 +2,213 @@ import logging
 import numpy as np
 import pandas as pd
 
+# Set Up Logging
 logging.basicConfig(level=logging.INFO)
-logging.basicConfig(level=logging.ERROR)
-logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
 
 np.random.seed(42)
 
 class DiabetesDataset:
-    
-    def __init__(self):
-        self.samples = None
-        
-    def Age(self):
+    """Generates synthetic data for diabetes research."""
+
+    def __init__(self, samples=1000):
+        """Initialize the Dataset with the number of Samples."""
+        self.samples = samples
+
+    def _generate_data(self, mean, scale, low, high):
+        """Generate Normally Distributed Data and Clip to a Specified Range."""
         try:
-            ages = np.random.normal(loc=50, scale=15, size=self.samples).astype(int)
-            ages = np.clip(ages, 18, 100)
-            return ages
+            data = np.random.normal(loc=mean, scale=scale, size=self.samples)
+            return np.clip(data, low, high)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
-    def Gender(self):
-        try:
-            genders = np.random.choice(['Male', 'Female'], size=self.samples)
-            return genders
-        except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
-    def Weight(self):
-        try:
-            self.weights = np.random.normal(loc=70, scale=15, size=self.samples)
-            self.weights = np.clip(self.weights, 40, 150)
-            return self.weights
-        except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
-    def Height(self):
-        try:
-            self.heights = np.random.normal(loc=1.7, scale=0.1, size=self.samples)
-            self.heights = np.clip(self.heights, 1.4, 2.1)
-            return self.heights
-        except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
-    def FamilyHistory(self):
-        try:
-            family_histories = np.random.choice(['Yes', 'No'], size=self.samples)
-            return family_histories
-        except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
+            logger.error("Error Generating Data", exc_info=e)
             raise
-        
+
+    def Age(self):
+        """Generate Ages between 18 and 100."""
+        return self._generate_data(mean=50, scale=40, low=18, high=100)
+
+    def Gender(self):
+        """Generate Random Genders."""
+        try:
+            return np.random.choice(['Male', 'Female'], size=self.samples)
+        except Exception as e:
+            logger.error("Error Generating Genders", exc_info=e)
+            raise
+
+    def Weight(self):
+        """Generate Weights between 40 and 150 Kg."""
+        return self._generate_data(mean=60, scale=40, low=40, high=150)
+
+    def Height(self):
+        """Generate Heights between 1.4 and 2.0 Meters."""
+        return self._generate_data(mean=1.6, scale=0.4, low=1.4, high=2.0)
+
+    def FamilyHistory(self):
+        """Generate Family History of Diabetes."""
+        try:
+            return np.random.choice(['Yes', 'No'], size=self.samples)
+        except Exception as e:
+            logger.error("Error Generating Family History", exc_info=e)
+            raise
+
     def PhysicalActivityLevel(self):
+        """Generate Physical Activity Levels."""
         try:
-            activity_levels = np.random.choice(['Low', 'Moderate', 'High'], size=self.samples)
-            return activity_levels
+            return np.random.choice(['Low', 'Moderate', 'High'], size=self.samples)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+            logger.error("Error Generating Physical Activity Levels", exc_info=e)
+            raise
+
     def DietaryHabits(self):
+        """Generate Dietary Habits."""
         try:
-            dietary_habits = np.random.choice(['Flexitarian',
-                                               'Keto',
-                                               'Mediterranean',
-                                               'Paleo',
-                                               'Pescatarian',
-                                               'Non-Veg',
-                                               'Whole Food Plant-Based',
-                                               'Vegan',
-                                               'Vegetarian'
-                                              ], size=self.samples)
-            return dietary_habits
+            return np.random.choice([
+                'Flexitarian', 'Keto', 'Mediterranean', 'Paleo', 'Pescatarian',
+                'Non-Veg', 'Whole Food Plant-Based', 'Vegan', 'Vegetarian'
+            ], size=self.samples)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-    
-    def Ethinicity_Race(self):
+            logger.error("Error Generating Dietary Habits", exc_info=e)
+            raise
+
+    def Ethnicity_Race(self):
+        """Generate Ethnicities/Races."""
         try:
-            ethnicities = np.random.choice(['Caucasian', 
-                                            'Asian', 
-                                            'Hispanic/Latino', 
-                                            'African/American',
-                                            'Mixed/Multiethnic',
-                                            'Middle Eastern/North African'
-                                            ], size=self.samples)
-            return ethnicities
+            return np.random.choice([
+                'Caucasian', 'Asian', 'Hispanic/Latino', 'African/American',
+                'Mixed/Multiethnic', 'Middle Eastern/North African'
+            ], size=self.samples)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-    
+            logger.error("Error Generating Ethnicity/Race", exc_info=e)
+            raise
+
     def MedicationUse(self):
+        """Generate Medication Use Status."""
         try:
-            medication_uses = np.random.choice(['Yes', 'No'], size=self.samples)
-            return medication_uses
+            return np.random.choice(['Yes', 'No'], size=self.samples)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+            logger.error("Error Generating Medication Use", exc_info=e)
+            raise
+
     def SleepQuality(self):
+        """Generate Sleep Quality."""
         try:
-            sleep_qualities = np.random.choice(['Poor', 'Fair', 'Good', 'Excellent'], size=self.samples)
-            return sleep_qualities
+            return np.random.choice(['Poor', 'Fair', 'Good', 'Excellent'], size=self.samples)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+            logger.error("Error Generating Sleep Quality", exc_info=e)
+            raise
+
     def StressLevel(self):
+        """Generate Stress Levels."""
         try:
-            stress_levels = np.random.choice(['Low', 'Moderate', 'High'], size=self.samples)
-            return stress_levels
+            return np.random.choice(['Low', 'Moderate', 'High'], size=self.samples)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+            logger.error("Error Generating Stress Levels", exc_info=e)
+            raise
+
     def WaistCircumference(self):
-        try:
-            self.waist_circumferences = np.random.normal(loc=90, scale=15, size=self.samples)
-            self.waist_circumferences = np.clip(self.waist_circumferences, 60, 150)
-            return self.waist_circumferences
-        except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+        """Generate Waist Circumferences between 60 and 150 cm."""
+        return self._generate_data(mean=85, scale=10, low=60, high=150)
+
     def HipCircumference(self):
-        try:
-            self.hip_circumferences = np.random.normal(loc=100, scale=15, size=self.samples)
-            self.hip_circumferences = np.clip(self.hip_circumferences, 70, 160)
-            return self.hip_circumferences
-        except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+        """Generate Hip Circumferences between 70 and 160 cm."""
+        return self._generate_data(mean=103, scale=15, low=70, high=160)
+
     def WaistToHipRatio(self):
+        """Calculate the Waist-to-Hip Ratio."""
         try:
-            waist_to_hip_ratios = self.waist_circumferences / self.hip_circumferences
-            return waist_to_hip_ratios
+            waist = self.WaistCircumference()
+            hip = self.HipCircumference()
+            return waist / hip
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+            logger.error("Error Calculating Waist-to-Hip Ratio", exc_info=e)
+            raise
+
     def SmokingStatus(self):
+        """Generate Smoking Status."""
         try:
-            smoking_statuses = np.random.choice(['Non-Smoker', 'Smoker'], size=self.samples)
-            return smoking_statuses
+            return np.random.choice(['Non-Smoker', 'Smoker'], size=self.samples)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+            logger.error("Error Generating Smoking Status", exc_info=e)
+            raise
+
     def FastingBloodGlucose(self):
-        try:
-            fasting_glucose = np.random.normal(loc=100, scale=15, size=self.samples)
-            fasting_glucose = np.clip(fasting_glucose, 60, 200)
-            return fasting_glucose
-        except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+        """Generate Fasting Blood Glucose levels between 60 and 140 mg/dl."""
+        return self._generate_data(mean=95, scale=12, low=60, high=140)
+
     def HbA1c(self):
-        try:
-            hba1c_levels = np.random.normal(loc=5.5, scale=1.0, size=self.samples)
-            hba1c_levels = np.clip(hba1c_levels, 4.0, 10.0)
-            return hba1c_levels
-        except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+        """Generate HbA1c levels between 4.0 and 10.0."""
+        return self._generate_data(mean=5.5, scale=1.0, low=4.0, high=10.0)
+
     def BMI(self):
+        """Calculate BMI using weight and height."""
         try:
-            bmi = self.weights / (self.heights ** 2)
-            return bmi
+            weight = self.Weight()
+            height = self.Height()
+            return weight / (height ** 2)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
+            logger.error("Error Calculating BMI", exc_info=e)
+            raise
+
     def CholesterolLevel(self):
+        """Generate Cholesterol Levels between 100 and 300 mg/dl."""
+        return self._generate_data(mean=200, scale=40, low=100, high=300)
+
+    def DiabetesStatus(self):
+        """Determine Diabetes Status based on various Conditions."""
         try:
-            cholesterol_levels = np.random.normal(loc=200, scale=30, size=self.samples)
-            cholesterol_levels = np.clip(cholesterol_levels, 100, 300)
-            return cholesterol_levels
-        except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
-    def DiabetesStatus(self, cholesterol_levels, fasting_glucose, bmi, waist_to_hip_ratios, hba1c_levels):
-        try:
+            cholesterol = self.CholesterolLevel()
+            fasting_glucose = self.FastingBloodGlucose()
+            bmi = self.BMI()
+            waist_to_hip_ratio = self.WaistToHipRatio()
+            hba1c = self.HbA1c()
+
             conditions = [
-                cholesterol_levels <= 110,
+                cholesterol > 200,
                 fasting_glucose >= 126,
                 bmi >= 28,
-                waist_to_hip_ratios >= 1,
-                hba1c_levels >= 6.5
+                waist_to_hip_ratio >= 1,
+                hba1c >= 6.5
             ]
-            
+
             condition_sum = np.sum(conditions, axis=0)
-            diabetes_statuses = (condition_sum >= 2).astype(int)
-            return diabetes_statuses
+            return (condition_sum >= 2).astype(int)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
-    def PrepareData(self, samples=1000):
+            logger.error("Error Determining Diabetes Status", exc_info=e)
+            raise
+
+    def PrepareData(self):
+        """Generate the dataset and save it to an Excel file."""
         try:
-            self.samples = samples
-            
             data = pd.DataFrame({
-                       'Age': self.Age(),
-                       'Gender': self.Gender(),
-                       'Weight': self.Weight(),
-                       'Height': self.Height(),
-                       'Family History': self.FamilyHistory(),
-                       'Physical Activity Level': self.PhysicalActivityLevel(),
-                       'Dietary Habits': self.DietaryHabits(),
-                       'Ethnicity/Race': self.Ethinicity_Race(),
-                       'Medication Use': self.MedicationUse(),
-                       'Sleep Duration/Quality': self.SleepQuality(),
-                       'Stress Levels': self.StressLevel(),
-                       'Waist Circumference': self.WaistCircumference(),
-                       'Hip Circumference': self.HipCircumference(),
-                       'Smoking Status': self.SmokingStatus(),
-                       'Fasting Blood Glucose': self.FastingBloodGlucose(),
-                       'HbA1c': self.HbA1c(),
-                       'Waist-to-Hip Ratio': self.WaistToHipRatio(),
-                       'BMI': self.BMI(),
-                       'Cholesterol Level': self.CholesterolLevel(),
-                       'Diabetes': self.DiabetesStatus(self.CholesterolLevel(),
-                                                       self.FastingBloodGlucose(),
-                                                       self.BMI(),
-                                                       self.WaistToHipRatio(),
-                                                       self.HbA1c()
-                                                       )
-                   })
+                'Age': self.Age(),
+                'Gender': self.Gender(),
+                'Weight': self.Weight(),
+                'Height': self.Height(),
+                'Family History': self.FamilyHistory(),
+                'Physical Activity Level': self.PhysicalActivityLevel(),
+                'Dietary Habits': self.DietaryHabits(),
+                'Ethnicity/Race': self.Ethnicity_Race(),
+                'Medication Use': self.MedicationUse(),
+                'Sleep Quality': self.SleepQuality(),
+                'Stress Levels': self.StressLevel(),
+                'Waist Circumference': self.WaistCircumference(),
+                'Hip Circumference': self.HipCircumference(),
+                'Smoking Status': self.SmokingStatus(),
+                'Fasting Blood Glucose': self.FastingBloodGlucose(),
+                'HbA1c': self.HbA1c(),
+                'Waist-to-Hip Ratio': self.WaistToHipRatio(),
+                'BMI': self.BMI(),
+                'Cholesterol Level': self.CholesterolLevel(),
+                'Diabetes': self.DiabetesStatus()
+            })
             
-            data.to_excel('models-data\Diabetes_Analysis\DiabetesData.xlsx', index=False)
+            data.to_excel('Diabetes_Analysis\DiabetesData.xlsx', index=False)
         except Exception as e:
-            logging.error("An Error Occured: ", exc_info=e)
-            raise e
-        
-if __name__=="__main__":
+            logger.error("Error Preparing Data", exc_info=e)
+            raise
+
+if __name__ == "__main__":
     
-    Data = DiabetesDataset()
-    Data.PrepareData(100000)
+    dataset = DiabetesDataset(samples=100000)
+    dataset.PrepareData()
